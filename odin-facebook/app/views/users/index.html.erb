@@ -1,2 +1,29 @@
-<h1>Users#index</h1>
-<p>Find me in app/views/users/index.html.erb</p>
+<h1>All Users</h1>
+
+<ul>
+	<% @users.each do |user| %>
+		<%= link_to user.name, user %>
+		<% friendship = Friendship.where(to_id: current_user.id, from_id: user.id).first %>
+		<% unless Friendship.where(to_id: current_user.id, from_id: user.id).empty? %>
+			<% if friendship.accepted == false %>
+				 | <%= link_to "Accept Friend Request", "friendships/#{user.id}/friend_request_accept", method: :put %>
+				 | <%= link_to "Reject Friend Request", "friendships/#{user.id}/friend_request_reject", method: :delete %>
+			<% elsif friendship.accepted == true %>
+				 (Friend)
+			<% end %>
+		<% end %>
+		<% friendship = Friendship.where(from_id: current_user.id, to_id: user.id).first %>
+		<% unless Friendship.where(from_id: current_user.id, to_id: user.id).empty? %>
+			<% if friendship.accepted == false %>
+				 <i>(Pending friend request)</i>
+			<% elsif friendship.accepted == true %>
+				 (Friend)
+			<% end %>
+		<% end %>
+		<% if Friendship.where(to_id: current_user.id, from_id: user.id).empty? && Friendship.where(from_id: current_user.id, to_id: user.id).empty? %>
+			<% unless user == current_user %>
+				 | <%= link_to "Add Friend", "friendships/#{user.id}/friend_request", method: :put %>
+			<% end %>
+		<% end %><br>
+	<% end %>
+<ul>

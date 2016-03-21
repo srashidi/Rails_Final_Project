@@ -1,0 +1,12 @@
+<h1>Pending Friendships</h1>
+
+<% @friendships.each do |friendship| %>
+	<% pending_friend = User.find(friendship.from_id) %>
+	<%= link_to pending_friend.name, pending_friend %>
+	 | <%= link_to "Accept Friend Request", "#{pending_friend.id}/friend_request_accept", method: :put %>
+	 | <%= link_to "Reject Friend Request", "#{pending_friend.id}/friend_request_reject", method: :delete %>
+	<br>
+<% end %>
+<% if @friendships.empty? %>
+	<h3><i>No pending friend requests</i></h3>
+<% end %>

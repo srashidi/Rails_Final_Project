@@ -1,13 +1,19 @@
 Rails.application.routes.draw do
   get 'friendships/show'
+  get 'friendships/pending'
 
   get 'posts/index'
 
-  get 'users/new'
-  get 'users/show'
-  get 'users/index'
-  get 'users/edit'
-  devise_for :users
+  devise_for :users, :controllers => { registrations: 'registrations/registrations' }
+  resources :users, only: [:show, :index]
+
+  resources :friendships do
+  	member do
+  		put 'friend_request'
+  		put 'friend_request_accept'
+  		delete 'friend_request_reject'
+  	end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
