@@ -8,25 +8,23 @@
 </head>
 <body>
 <header class="navbar navbar-fixed-top navbar-inverse">
-<div class="container">
-	<nav>
-	<% if user_signed_in? %>
-		<div align="left">
-			<%= link_to "Home", root_path %>
-			 | <%= link_to "Profile", current_user %>
-			 | <%= link_to "All Users", users_path %>
-			 | <%= link_to "Friend requests (#{current_user.pending_friendships.count})", friendships_pending_path %>
-		</div>
-		<div align="right">
-			Signed in as <%= link_to current_user.username, current_user %>. Not you?
-			<%= link_to "Sign out", destroy_user_session_path, method: :delete %>
-		</div>
-	<% else %>
-		<%= link_to "Sign up", new_user_registration_path %> or
-		<%= link_to "Sign in", new_user_session_path %>
-	<% end %>
-	</nav>
-</div>
+	<div class="container">
+		<nav>
+			<% if user_signed_in? %>
+				Signed in as <%= link_to current_user.username, current_user %>. Not you?
+				<%= link_to "Sign out", destroy_user_session_path, method: :delete %>
+				<ul class="nav navbar-nav navbar-right">
+					<li><%= link_to "Home", root_path %></li>
+					<li><%= link_to "Profile", current_user %></li>
+					<li><%= link_to "All Users", users_path %></li>
+					<li><%= link_to "Friend requests (#{current_user.pending_friendships.count})", friendships_pending_path %></li>
+				</ul>
+			<% else %>
+				<%= link_to "Sign up", new_user_registration_path %> or
+				<%= link_to "Sign in", new_user_session_path %>
+			<% end %>
+		</nav>
+	</div>
 </header>
 <div class="container">
 	<% flash.each do |message_type, message| %>

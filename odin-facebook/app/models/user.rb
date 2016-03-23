@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
 	has_many :friendings, through: :initiated_friendships, source: :friending
 	has_many :friendeds, through: :received_friendships, source: :friended
 
+	has_many :posts, dependent: :destroy
+	has_many :comments, dependent: :destroy
+	has_many :likes, dependent: :destroy
+
 	# Password digest for given password string
   def User.digest(string)
 		cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
@@ -34,4 +38,22 @@ class User < ActiveRecord::Base
 	def pending_friendships
 		self.friendships.where(to_id: self.id, accepted: false)
   end
+
+  def active_friendships
+  	self.friendships.where(accepted: true)
+  end
+
+  def friends
+		ids = []
+		self.active_friendships.each do |friendship|
+			if friendship.from_id == self.id
+				id = friendship.to_id
+				ids << id
+			elsif friendship.to_id == self.id
+				id = friendship.from_id
+				ids << id
+			end
+		end
+		User.find(ids)
+	end
 end

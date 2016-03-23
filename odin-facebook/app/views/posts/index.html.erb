@@ -1,2 +1,11 @@
-<h1>Posts#index</h1>
-<p>Find me in app/views/posts/index.html.erb</p>
+<h1>Welcome, <%= current_user.name %></h1>
+
+<%= render 'shared/new_post_form' %>
+<br>
+<% unless @posts.empty? %>
+	<%= will_paginate %>
+	<br>
+	<%= render @posts %>
+
+	<%= will_paginate %>
+<% end %>

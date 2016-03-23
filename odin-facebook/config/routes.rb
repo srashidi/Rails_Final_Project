@@ -1,11 +1,15 @@
 Rails.application.routes.draw do
+
   get 'friendships/show'
   get 'friendships/pending'
 
-  get 'posts/index'
-
   devise_for :users, :controllers => { registrations: 'registrations/registrations' }
   resources :users, only: [:show, :index]
+
+  resources :comments, only: [:create, :destroy]
+  resources :posts, only: [:create, :index, :destroy] do
+  	resources :likes, only: [:create, :destroy]
+  end
 
   resources :friendships do
   	member do
