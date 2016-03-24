@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   get 'friendships/show'
   get 'friendships/pending'
 
-  devise_for :users, :controllers => { registrations: 'registrations/registrations' }
+  devise_for :users, :controllers => { registrations: 'custom/registrations',
+  																		 sessions: 'custom/sessions',
+  																		 omniauth_callbacks: 'custom/omniauth_callbacks' }
   resources :users, only: [:show, :index]
 
   resources :comments, only: [:create, :destroy]

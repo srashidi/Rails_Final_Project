@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable
+         :omniauthable, :omniauth_providers => [:facebook]
 
 	# Validations for name and username
   validates :name, length: { maximum: 50 }
@@ -55,5 +55,13 @@ class User < ActiveRecord::Base
 			end
 		end
 		User.find(ids)
+	end
+
+	def self.from_omniauth(auth)
+		where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+			user.email = auth.info.email
+			user.password = Devise.friendly_token[0,20]
+			user.name = auth.info.name   # assuming the user model has a name
+		end
 	end
 end
