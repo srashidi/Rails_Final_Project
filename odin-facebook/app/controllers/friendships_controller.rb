@@ -3,6 +3,7 @@ class FriendshipsController < ApplicationController
   end
 
   def show
+  	@user = User.find(params[:id])
   end
 
   def pending
@@ -26,7 +27,7 @@ class FriendshipsController < ApplicationController
   	to_id = current_user.id
   	from_id = params[:id]
   	friendship = Friendship.where( to_id: to_id, from_id: from_id ).first
-  	friendship.update_attributes(accepted: true, accepted_time: Time.new)
+  	friendship.update_attributes(accepted: true)
   	redirect_to request.referer || root_url
   end
 

@@ -1,12 +1,16 @@
 <h1>Pending Friendships</h1>
 
-<% @friendships.each do |friendship| %>
-	<% pending_friend = User.find(friendship.from_id) %>
-	<%= link_to pending_friend.name, pending_friend %>
-	 | <%= link_to "Accept Friend Request", friend_request_accept_friendship_path(pending_friend.id), method: :put %>
-	 | <%= link_to "Reject Friend Request", friend_request_reject_friendship_path(pending_friend.id), method: :delete %>
-	<br>
-<% end %>
+<ul class="users">
+	<% @friendships.each do |friendship| %>
+		<% pending_friend = User.find(friendship.from_id) %>
+		<li>
+			<%= gravatar_for pending_friend, size: 50 %>
+			<%= link_to pending_friend.name, pending_friend %>
+			 | <%= link_to "Accept Friend Request", friend_request_accept_friendship_path(pending_friend.id), method: :put %>
+			 | <%= link_to "Reject Friend Request", friend_request_reject_friendship_path(pending_friend.id), method: :delete %>
+		</li>
+	<% end %>
+</ul>
 <% if @friendships.empty? %>
 	<h3><i>No pending friend requests</i></h3>
 <% end %>

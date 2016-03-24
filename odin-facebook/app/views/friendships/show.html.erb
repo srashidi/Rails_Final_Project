@@ -1,2 +1,12 @@
-<h1>Friendships#show</h1>
-<p>Find me in app/views/friendships/show.html.erb</p>
+<h1>Friends of <%= link_to @user.name, @user %></h1>
+
+<ul class="users">
+	<% @user.friends.each do |friend| %>
+		<% friendship = Friendship.where("(from_id=? AND to_id=?) OR (to_id=? AND from_id=?)", @user.id, friend.id, @user.id, friend.id).first %>
+		<li>
+			<%= gravatar_for friend, size: 50 %>
+			<%= link_to friend.name, friend %><br>
+			Friend since <%= friendship.updated_at.strftime("%B %e, %Y") %>
+		</li>
+	<% end %>
+</ul>

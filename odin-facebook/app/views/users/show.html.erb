@@ -1,30 +1,41 @@
-<h1><%= @user.name %></h1>
-<h4 align="center"><% friendship = Friendship.where(to_id: current_user.id, from_id: @user.id).first %>
-<% unless Friendship.where(to_id: current_user.id, from_id: @user.id).empty? || @user == current_user %>
-	<% if friendship.accepted == false %>
-		 <%= link_to "Accept Friend Request", friend_request_accept_friendship_path(@user.id), method: :put %>
-		 | <%= link_to "Reject Friend Request", friend_request_reject_friendship_path(@user.id), method: :delete %>
-	<% elsif friendship.accepted == true %>
-		 (Friend)
-	<% end %>
-<% end %>
-<% friendship = Friendship.where(from_id: current_user.id, to_id: @user.id).first %>
-<% unless Friendship.where(from_id: current_user.id, to_id: @user.id).empty? || @user == current_user %>
-	<% if friendship.accepted == false %>
-		 <i>(Pending friend request)</i>
-	<% elsif friendship.accepted == true %>
-		 (Friend)
-	<% end %>
-<% end %>
-<% if Friendship.where(to_id: current_user.id, from_id: @user.id).empty? && Friendship.where(from_id: current_user.id, to_id: @user.id).empty? %>
-	<% unless @user == current_user %>
-		 | <%= link_to "Add Friend", "friendships/#{@user.id}/friend_request", method: :put %>
-	<% end %>
-<% end %></h4><br>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+			<h1>
+				<%= gravatar_for(@user) %>
+				<%= @user.name %><br><br>
+				<% friendship = Friendship.where(to_id: current_user.id, from_id: @user.id).first %>
+				<% unless Friendship.where(to_id: current_user.id, from_id: @user.id).empty? || @user == current_user %>
+					<% if friendship.accepted == false %>
+						 <%= link_to "Accept Friend Request", friend_request_accept_friendship_path(@user.id), method: :put %>
+						 | <%= link_to "Reject Friend Request", friend_request_reject_friendship_path(@user.id), method: :delete %>
+					<% elsif friendship.accepted == true %>
+						 (Friend)
+					<% end %>
+				<% end %>
+				<% friendship = Friendship.where(from_id: current_user.id, to_id: @user.id).first %>
+				<% unless Friendship.where(from_id: current_user.id, to_id: @user.id).empty? || @user == current_user %>
+					<% if friendship.accepted == false %>
+						 <i>(Pending friend request)</i>
+					<% elsif friendship.accepted == true %>
+						 (Friend)
+					<% end %>
+				<% end %>
+				<% if Friendship.where(to_id: current_user.id, from_id: @user.id).empty? && Friendship.where(from_id: current_user.id, to_id: @user.id).empty? %>
+					<% unless @user == current_user %>
+						 <%= link_to "Add Friend", friend_request_friendship_path(@user.id), method: :put %>
+					<% end %>
+				<% end %><br>
+				<%= link_to "Friends of #{@user.name}", friendship_path(@user) %>
+			</h1>
+		</section>
+	</aside>
+</div>
 
 <%= render 'shared/new_post_form' if @user == current_user %>
 <br>
 <% @posts.each do |post| %>
+	<%= link_to gravatar_for(post.user, size: 50), post.user %>
 	<%= post.message %><br>
 	<i>From: <%= post.updated_at.strftime("%B %e, %Y, at %l:%M:%S %p") %></i><br>
 	<% if post.likes.where(user_id: current_user.id).empty? %>
@@ -37,6 +48,7 @@
 																	 data: { confirm: "You sure?" } %>
 	<% end %>
 	<br>
+	<u><strong>Comments</strong></u><br>
 	<% unless post.comments.empty? %>
 		<% post.comments.each do |comment| %>
 			From <%= link_to comment.user.name, comment.user %> <i>(<%= time_ago_in_words(comment.updated_at) %> ago)</i>: <%= comment.message %>
@@ -45,6 +57,8 @@
 																			 data: { confirm: "You sure?" } %>
 			<% end %><br>
 		<% end %>
+	<% else %>
+		<i>None</i>
 	<% end %>
 	<%= form_for @comment do |f| %>
 		<%= f.hidden_field :post_id, value: post.id %>

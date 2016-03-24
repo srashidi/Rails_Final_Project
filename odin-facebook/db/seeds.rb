@@ -24,8 +24,7 @@ end
 	to_id = n+1
 	Friendship.create!( from_id: 1,
 											to_id: to_id,
-											accepted: true,
-											accepted_time: Time.now)
+											accepted: true)
 	to_id = n+25
 	Friendship.create!( from_id: 1,
 											to_id: to_id,
