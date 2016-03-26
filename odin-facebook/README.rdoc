@@ -4,3 +4,5 @@ The final project for the Ruby on Rails course in the Odin Project.
 This application emulates the functionality of Facebook, with Users,
 Posts, Comments on Posts, Friend Requests, Likes, and other core
 functionality.
+
+Heroku link: https://calm-harbor-69843.herokuapp.com/
